@@ -191,7 +191,7 @@ impl QueryEngine {
         let log_level = log_level.parse::<LevelFilter>().unwrap();
         let logger = Logger::new(log_queries, log_level, log_callback, enable_tracing);
 
-        let connector_mode = ConnectorMode::Js;
+        let connector_mode = ConnectorMode::Rust;
 
         Ok(Self {
             inner: RwLock::new(Inner::Builder(builder)),
