@@ -130,7 +130,7 @@ impl QueryEngine {
         options: ConstructorOptions,
         callback: CStringFunc,
         // maybe_adapter: Option<JsObject>,
-    ) -> Result<QueryEngine, wasm_bindgen::JsError> {
+    ) -> Result<QueryEngine, ApiError> {
         let log_callback = LogCallback(callback);
 
         let ConstructorOptions {
@@ -202,7 +202,7 @@ impl QueryEngine {
 
     /// Connect to the database, allow queries to be run.
     // #[wasm_bindgen]
-    pub async fn connect(&self, trace: String) -> Result<(), wasm_bindgen::JsError> {
+    pub async fn connect(&self, trace: String) -> Result<(), ApiError> {
         let dispatcher = self.logger.dispatcher();
 
         async {
@@ -272,7 +272,7 @@ impl QueryEngine {
 
     /// Disconnect and drop the core. Can be reconnected later with `#connect`.
     // #[wasm_bindgen]
-    pub async fn disconnect(&self, trace: String) -> Result<(), wasm_bindgen::JsError> {
+    pub async fn disconnect(&self, trace: String) -> Result<(), ApiError> {
         let dispatcher = self.logger.dispatcher();
 
         async {
@@ -308,7 +308,7 @@ impl QueryEngine {
         body: String,
         trace: String,
         tx_id: Option<String>,
-    ) -> Result<String, wasm_bindgen::JsError> {
+    ) -> Result<String, ApiError> {
         let dispatcher = self.logger.dispatcher();
 
         async {
@@ -342,7 +342,7 @@ impl QueryEngine {
 
     /// If connected, attempts to start a transaction in the core and returns its ID.
     // #[wasm_bindgen(js_name = startTransaction)]
-    pub async fn start_transaction(&self, input: String, trace: String) -> Result<String, wasm_bindgen::JsError> {
+    pub async fn start_transaction(&self, input: String, trace: String) -> Result<String, ApiError> {
         let inner = self.inner.read().await;
         let engine = inner.as_engine()?;
         let dispatcher = self.logger.dispatcher();
@@ -367,7 +367,7 @@ impl QueryEngine {
 
     /// If connected, attempts to commit a transaction with id `tx_id` in the core.
     // #[wasm_bindgen(js_name = commitTransaction)]
-    pub async fn commit_transaction(&self, tx_id: String, trace: String) -> Result<String, wasm_bindgen::JsError> {
+    pub async fn commit_transaction(&self, tx_id: String, trace: String) -> Result<String, ApiError> {
         let inner = self.inner.read().await;
         let engine = inner.as_engine()?;
 
@@ -385,7 +385,7 @@ impl QueryEngine {
 
     /// If connected, attempts to roll back a transaction with id `tx_id` in the core.
     // #[wasm_bindgen(js_name = rollbackTransaction)]
-    pub async fn rollback_transaction(&self, tx_id: String, trace: String) -> Result<String, wasm_bindgen::JsError> {
+    pub async fn rollback_transaction(&self, tx_id: String, trace: String) -> Result<String, ApiError> {
         let inner = self.inner.read().await;
         let engine = inner.as_engine()?;
 
@@ -402,7 +402,7 @@ impl QueryEngine {
     }
 
     // #[wasm_bindgen]
-    pub async fn metrics(&self, json_options: String) -> Result<(), wasm_bindgen::JsError> {
+    pub async fn metrics(&self, json_options: String) -> Result<(), ApiError> {
         Err(ApiError::configuration("Metrics is not enabled in Wasm.").into())
     }
 }
